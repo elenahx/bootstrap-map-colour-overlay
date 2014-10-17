@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+    <title>Map Color Overlay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.10/js/esri/css/esri.css">   
+    <link rel="stylesheet" type="text/css" href="http://esri.github.io/bootstrap-map-js/src/css/bootstrapmap.css">  
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-colorpicker.css">  	
+    <link rel="stylesheet" type="text/css" href="css/main.css">  	
+
+  </head>
+  <body>
+    
+    <div class="container">
+      <div id="map" > <div id="colors"> </div></div> 
+    </div>
+
+    <script type="text/javascript">
+	
+        var package_path = "http://esri.github.com/bootstrap-map-js/src/js";
+        var dojoConfig = {
+            packages: [{
+                name: "application",
+                location: package_path
+            }]
+        };
+    </script>
+    <script src="http://js.arcgis.com/3.10compact"></script>
+    <script>
+		mapdiv = "map"
+        require(["esri/map", "application/bootstrapmap", "dojo/domReady!"], 
+          function(Map, BootstrapMap) {
+            // Get a reference to the ArcGIS Map class
+            var map = BootstrapMap.create("map",{
+              basemap:"gray",
+			  center:[-0.1139583,51.506423],
+              zoom:14
+            });
+			
+			<!-- Wait until window has loaded before changing colours -->
+			$(window).load( function() {
+				$(function(){
+					$('#colors').colorpicker({format: "rgba"})
+						.on("changeColor", function(event) {
+						c = event.color.toRGB();
+						changeColourOverlay(c.r, c.g, c.b, c.a);
+						$("#colors").css("background-color", "rgba(" + c.r + "," + c.g + "," + c.b + "," + c.a +")");
+					});
+					$('#colors').colorpicker("setValue", "rgba(0, 0, 0, 0.1)")
+				});
+			});
+		});
+		
+		<!-- Change colour -->
+		function changeColourOverlay(r,g,b,a) { 
+			col = "rgba(" + r + "," + g + "," + b + "," + a + ")"
+			console.log("defined?" , $("#" + mapdiv + "_gc").css("background-color", col))
+		}
+		
+    </script>
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 	<!-- jQuery -->
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> <!-- Bootstrap -->
+	<script src="js/bootstrap-colorpicker.js"></script>  <!-- Bootstrap Colorpicker -->
+	<script> 
+			
+	</script>
+  </body>
+</html>
